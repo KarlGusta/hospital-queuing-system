@@ -7,7 +7,11 @@ function generateTicketNumber($departmentId) {
     $stmt->execute([$departmentId]);
     $count = $stmt->fetchColumn();
     $number = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
-    return "D{$departmentId}{$date}{$number}";
+
+    // Generate a random number to ensure uniqueness
+    $uniqueId = rand(1000, 9999); // Random number between 1000 and 9999 
+
+    return "D{$departmentId}{$date}{$number}-{$uniqueId}";
 }
 
 function addToQueue($patientName, $departmentId) {
