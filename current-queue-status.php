@@ -33,6 +33,7 @@ require_once 'config/paths.php';
             /* Pointer cursor on hover */
             transition: background-color 0.3s;
             /* Smooth transition */
+            font-size: 16px !important;
         }
 
         .get-ticket-button:hover {
@@ -49,13 +50,14 @@ require_once 'config/paths.php';
             /* Text color */
             border: none;
             /* Remove border */
-            border-radius: 5px;
+            border-radius: 5px !important;
             /* Rounded corners */
             /* Padding for better appearance */
             cursor: pointer;
             /* Pointer cursor on hover */
             transition: background-color 0.3s;
             /* Smooth transition */
+            font-size: 16px !important;
         }
 
         .call-button:hover {
@@ -70,13 +72,14 @@ require_once 'config/paths.php';
             /* Text color */
             border: none;
             /* Remove border */
-            border-radius: 5px;
+            border-radius: 5px !important;
             /* Rounded corners */
             /* Padding for better appearance */
             cursor: pointer;
             /* Pointer cursor on hover */
             transition: background-color 0.3s;
             /* Smooth transition */
+            font-size: 16px !important;
         }
 
         .complete-button:hover {
@@ -94,7 +97,7 @@ require_once 'config/paths.php';
         body {
             font-family: 'Bricolage Grotesque', sans-serif !important;
             /* Change font to Bricolage Grotesque */
-            font-size: 15px !important;
+            font-size: 16px !important;
             /* Adjust the font size as needed */
             background-color: #FFF8EF !important;
             color: #0C0A09 !important;

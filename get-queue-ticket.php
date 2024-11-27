@@ -227,7 +227,6 @@ require_once 'config/paths.php';
     <!-- Tabler Core -->
     <script src="<?php echo path('assets', 'dist'); ?>js/tabler.min.js" defer></script>
     <script src="<?php echo path('assets', 'dist'); ?>js/demo.min.js" defer></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
 </body>
 
 </html>

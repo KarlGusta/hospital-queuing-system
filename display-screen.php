@@ -2,6 +2,9 @@
 // display_screen.php
 require_once 'config/db.php';
 
+// Include the path config. This is to make it easy to manage my URLs when I upload to production, that is cpanel
+require_once 'config/paths.php';
+
 // Function to get the most recently called ticket
 function getCurrentCalledTicket($departmentId = null)
 {
@@ -11,15 +14,15 @@ function getCurrentCalledTicket($departmentId = null)
         FROM queue_tickets qt
         JOIN departments d ON qt.department_id = d.id
         WHERE qt.status = 'called'";
-    
+
     $params = [];
     if ($departmentId) {
         $sql .= " AND qt.department_id = ?";
         $params = [$departmentId];
     }
-    
+
     $sql .= " ORDER BY qt.created_at DESC LIMIT 6"; // Get last 6 called tickets
-    
+
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -55,17 +58,6 @@ $initialTickets = getCurrentCalledTicket();
     <meta charset="UTF-8">
     <title>Hospital Queue Display</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            text-align: center;
-        }
-
         .display-container {
             background-color: #ffffff;
             padding: 20px;
@@ -76,8 +68,10 @@ $initialTickets = getCurrentCalledTicket();
 
         #ticketsContainer {
             display: grid;
-            grid-template-rows: 1fr 1fr;  /* Two rows */
-            grid-template-columns: repeat(3, 1fr);  /* Three columns */
+            grid-template-rows: 1fr 1fr;
+            /* Two rows */
+            grid-template-columns: repeat(3, 1fr);
+            /* Three columns */
             gap: 20px;
             margin-bottom: 20px;
         }
@@ -92,19 +86,22 @@ $initialTickets = getCurrentCalledTicket();
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 250px; /* Fixed height for consistent card size */
+            min-height: 250px;
+            /* Fixed height for consistent card size */
         }
 
         /* Adjust font sizes for better fit */
         .ticket-number {
-            font-size: 80px;  /* Slightly smaller */
+            font-size: 80px;
+            /* Slightly smaller */
             color: #0066cc;
             font-weight: bold;
             margin: 10px 0;
         }
 
         .department {
-            font-size: 32px;  /* Slightly smaller */
+            font-size: 32px;
+            /* Slightly smaller */
             color: #333;
             margin-bottom: 10px;
             text-align: center;
@@ -119,18 +116,41 @@ $initialTickets = getCurrentCalledTicket();
         /* Add media query for smaller screens */
         @media (max-width: 1200px) {
             #ticketsContainer {
-                grid-template-rows: repeat(3, 1fr);  /* Three rows */
-                grid-template-columns: repeat(2, 1fr);  /* Two columns */
+                grid-template-rows: repeat(3, 1fr);
+                /* Three rows */
+                grid-template-columns: repeat(2, 1fr);
+                /* Two columns */
             }
         }
 
         @media (max-width: 768px) {
             #ticketsContainer {
-                grid-template-rows: repeat(6, 1fr);  /* Six rows */
-                grid-template-columns: 1fr;  /* One column */
+                grid-template-rows: repeat(6, 1fr);
+                /* Six rows */
+                grid-template-columns: 1fr;
+                /* One column */
             }
         }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif !important;
+            /* Change font to Bricolage Grotesque */
+            font-size: 15px !important;
+            /* Adjust the font size as needed */
+            background-color: #FFF8EF !important;
+            color: #0C0A09 !important;
+        }
     </style>
+
+    <!-- CSS files -->
+    <link href="<?php echo path('assets', 'dist'); ?>css/tabler.min.css" rel="stylesheet" />
+    <link href="<?php echo path('assets', 'dist'); ?>css/tabler-flags.min.css" rel="stylesheet" />
+    <link href="<?php echo path('assets', 'dist'); ?>css/tabler-payments.min.css" rel="stylesheet" />
+    <link href="<?php echo path('assets', 'dist'); ?>css/tabler-vendors.min.css" rel="stylesheet" />
+    <link href="<?php echo path('assets', 'dist'); ?>css/demo.min.css" rel="stylesheet" />
+
+    <!-- For the font -->
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -141,7 +161,7 @@ $initialTickets = getCurrentCalledTicket();
                     <div class="department"><?php echo htmlspecialchars($ticket['department_name']); ?></div>
                     <div class="ticket-number">
                         <?php
-                        echo htmlspecialchars(substr($ticket['ticket_number'], 0, 2) . '...' . substr($ticket['ticket_number'], -3));
+                        echo htmlspecialchars(substr($ticket['ticket_number'], 0, 2) . '...' . substr($ticket['ticket_number'], -4));
                         ?>
                     </div>
                 </div>
@@ -155,12 +175,12 @@ $initialTickets = getCurrentCalledTicket();
         function updateDisplay(tickets) {
             const container = document.getElementById('ticketsContainer');
             container.innerHTML = '';
-            
+
             tickets.forEach(ticket => {
-                const formattedTicket = ticket.ticket_number !== 'None'
-                    ? ticket.ticket_number.substring(0,2) + '...' + ticket.ticket_number.slice(-3)
-                    : ticket.ticket_number;
-                    
+                const formattedTicket = ticket.ticket_number !== 'None' ?
+                    ticket.ticket_number.substring(0, 2) + '...' + ticket.ticket_number.slice(-4) :
+                    ticket.ticket_number;
+
                 const ticketRow = `
                     <div class="ticket-row">
                         <div class="department">${ticket.department_name}</div>
@@ -209,6 +229,15 @@ $initialTickets = getCurrentCalledTicket();
         // Comment out or remove the mockDisplayUpdate function and its interval
         // ... rest of the existing code ...
     </script>
+
+    <!-- Libs JS -->
+    <script src="<?php echo path('assets', 'dist'); ?>libs/apexcharts/dist/apexcharts.min.js" defer></script>
+    <script src="<?php echo path('assets', 'dist'); ?>libs/jsvectormap/dist/js/jsvectormap.min.js" defer></script>
+    <script src="<?php echo path('assets', 'dist'); ?>libs/jsvectormap/dist/maps/world.js" defer></script>
+    <script src="<?php echo path('assets', 'dist'); ?>libs/jsvectormap/dist/maps/world-merc.js" defer></script>
+    <!-- Tabler Core -->
+    <script src="<?php echo path('assets', 'dist'); ?>js/tabler.min.js" defer></script>
+    <script src="<?php echo path('assets', 'dist'); ?>js/demo.min.js" defer></script>
 </body>
 
 </html>
